@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">SshServer</string>
+    <string name="empty"></string>
+    <string name="add_server_msgbox_title">Add new server</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="delete">Delete</string>
+    <string name="lbl_name">Name: </string>
+    <string name="lbl_port">Port: </string>
+    <string name="error">ERROR</string>
+    <string name="error_no_name">Invalid server name</string>
+    <string name="error_no_port">Invalid server port</string>
+    <string name="error_already_present">The current entry is already inserted</string>
+    <string name="on_double_back_exit_text">Press once again to exit!</string>
+    <string name="default_port">2222</string>
+    <string name="unknown">UNKNOWN</string>
+    <string name="host_address">Host address:</string>
+    <string name="auth_mode">Auth mode:</string>
+    <string name="lbl_username">User name:</string>
+    <string name="lbl_userpwd">Password:</string>
+
+
+
+    <string-array name="auth_mode_list">
+        <item>Anonymous</item>
+        <item>Normal</item>
+    </string-array>
+
+</resources>
