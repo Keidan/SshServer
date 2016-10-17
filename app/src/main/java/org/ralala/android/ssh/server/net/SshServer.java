@@ -4,7 +4,9 @@ import android.util.Log;
 
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.server.Command;
+import org.apache.sshd.server.ForwardingFilter;
 import org.apache.sshd.server.PasswordAuthenticator;
+import org.apache.sshd.server.ServerFactoryManager;
 import org.apache.sshd.server.UserAuth;
 import org.apache.sshd.server.auth.UserAuthNone;
 import org.apache.sshd.server.auth.UserAuthPassword;
@@ -16,6 +18,7 @@ import org.apache.sshd.server.shell.ProcessShellFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 
+import java.net.InetSocketAddress;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -47,6 +50,9 @@ public class SshServer {
     if ( sshd != null ) return;
     /* create the server instance and set the default port */
     sshd = org.apache.sshd.SshServer.setUpDefaultServer();
+    sshd.getProperties().put(org.apache.sshd.SshServer.IDLE_TIMEOUT, "10000");
+    sshd.getProperties().put(org.apache.sshd.SshServer.AUTH_TIMEOUT, "10000");
+    sshd.getProperties().put("welcome-banner", "Welcome to android SshServer\n");
     sshd.setHost(host);
     sshd.setReuseAddress(true);
     sshd.setPort(sse.getPort());
@@ -74,6 +80,27 @@ public class SshServer {
     List<NamedFactory<Command>> namedFactoryList = new ArrayList<NamedFactory<Command>>();
     namedFactoryList.add(new SftpSubsystem.Factory());
     sshd.setSubsystemFactories(namedFactoryList);
+    sshd.setForwardingFilter(new ForwardingFilter() {
+      @Override
+      public boolean canForwardAgent(ServerSession serverSession) {
+        return true;
+      }
+
+      @Override
+      public boolean canForwardX11(ServerSession serverSession) {
+        return true;
+      }
+
+      @Override
+      public boolean canListen(InetSocketAddress inetSocketAddress, ServerSession serverSession) {
+        return true;
+      }
+
+      @Override
+      public boolean canConnect(InetSocketAddress inetSocketAddress, ServerSession serverSession) {
+        return true;
+      }
+    });
     /* start the server */
     sshd.start();
   }
