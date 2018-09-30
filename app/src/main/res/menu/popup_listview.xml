@@ -3,17 +3,23 @@
     <item
         android:id="@+id/start"
         android:title="@string/start"
-        android:icon="@drawable/on"
+        android:icon="@mipmap/ic_server_start"
         android:checkable="false"/>
     <item
         android:id="@+id/stop"
         android:title="@string/stop"
-        android:icon="@drawable/off"
+        android:icon="@mipmap/ic_server_stop"
+        android:checkable="false" />
+
+    <item
+        android:id="@+id/edit"
+        android:title="@string/edit"
+        android:icon="@mipmap/ic_edit"
         android:checkable="false" />
 
     <item
         android:id="@+id/delete"
         android:title="@string/delete"
-        android:icon="@drawable/garbage"
+        android:icon="@mipmap/ic_garbage"
         android:checkable="false" />
 </menu>

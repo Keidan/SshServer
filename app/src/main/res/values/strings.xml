@@ -1,14 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SshServer</string>
-    <string name="empty"></string>
+    <string name="notification_text_1">Server %d started on port %d</string>
+    <string name="notification_text_2">, for user \'%s\'</string>
     <string name="add_server_msgbox_title">Add new server</string>
-    <string name="ok">Ok</string>
+    <string name="edit_server_msgbox_title">Edit server</string>
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="servers">Servers</string>
+    <string name="servers_list">Servers list</string>
     <string name="cancel">Cancel</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+    <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="lbl_name">Name: </string>
-    <string name="lbl_port">Port: </string>
+    <string name="lbl_name">Name:</string>
+    <string name="lbl_port">Port:</string>
     <string name="error">ERROR</string>
     <string name="error_no_name">Invalid server name</string>
     <string name="error_no_port">Invalid server port</string>
@@ -20,8 +28,10 @@
     <string name="auth_mode">Auth mode:</string>
     <string name="lbl_username">User name:</string>
     <string name="lbl_userpwd">Password:</string>
-
-
+    <string name="anonymous">Anonymous</string>
+    <string name="normal">Normal</string>
+    <string name="lbl_user">User:</string>
+    <string name="error_return_an_exception">return an exception</string>
 
     <string-array name="auth_mode_list">
         <item>Anonymous</item>

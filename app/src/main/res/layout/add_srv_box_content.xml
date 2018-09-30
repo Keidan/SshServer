@@ -1,120 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            xmlns:lib="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
-    <GridLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="2" >
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/lblName"
-            android:layout_width="wrap_content"
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:text="@string/lbl_name"
-            android:labelFor="@+id/txtName"/>
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
 
-        <EditText
-            android:id="@+id/txtName"
-            android:layout_width="0dp"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/txtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_name"
+                android:inputType="text" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilPort"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal"
-            android:layout_row="0"
-            android:layout_marginStart="10sp"
-            android:inputType="text" >
-        </EditText>
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/tilName">
 
-        <TextView
-            android:id="@+id/lblPort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_row="1"
-            android:text="@string/lbl_port"
-            android:labelFor="@+id/txtName"/>
-
-        <EditText
-            android:id="@+id/txtPort"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal"
-            android:layout_row="1"
-            android:layout_marginStart="10sp"
-            android:inputType="number" >
-        </EditText>
-
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/txtPort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_port"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
 
         <TextView
             android:id="@+id/lblAuthMode"
-            android:layout_width="wrap_content"
+            style="@style/InputLabel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_row="2"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/tilPort"
+            android:paddingTop="10dp"
             android:text="@string/auth_mode" />
 
         <Spinner
             android:id="@+id/spAuthMode"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal"
-            android:layout_row="2"
-            android:padding="0dip" />
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/lblAuthMode"/>
 
-        <TextView
-            android:id="@+id/lblUsername"
-            android:layout_width="wrap_content"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilUsername"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_row="3"
-            android:text="@string/lbl_username"
-            android:visibility="gone"
-            android:labelFor="@+id/txtUsername"/>
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/spAuthMode"
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/txtUsername"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal"
-            android:layout_row="3"
-            android:layout_marginStart="10sp"
-            android:visibility="gone"
-            android:inputType="text" />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/txtUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_username"
+                android:inputType="text" />
+        </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/lblUserpwd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_row="4"
-            android:text="@string/lbl_userpwd"
-            android:visibility="gone"
-            android:labelFor="@+id/txtUsername"/>
 
-        <EditText
-            android:id="@+id/txtUserpwd"
-            android:layout_width="0dp"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilUserpwd"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal"
-            android:layout_row="4"
-            android:layout_marginStart="10sp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/tilUsername"
             android:visibility="gone"
-            android:inputType="textPassword" >
-        </EditText>
-    </GridLayout>
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorAccent">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/txtUserpwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_username"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
+
+    </RelativeLayout>
 
 </ScrollView>

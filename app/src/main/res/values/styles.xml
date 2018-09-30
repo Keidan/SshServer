@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
@@ -8,11 +9,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="FloatingActionButton" parent="android:Widget.Material.Button">
-        <item name="android:background">@drawable/fab_background</item>
-        <item name="android:stateListAnimator">@anim/fab_state_list_animator</item>
-        <item name="android:layout_width">56dp</item>
-        <item name="android:layout_height">56dp</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="InputLabel" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:paddingBottom">@dimen/input_label_paddingBottom</item>
+        <item name="android:paddingStart">@dimen/input_label_paddingStart</item>
+        <item name="android:paddingEnd">@dimen/input_label_paddingEnd</item>
+    </style>
 </resources>

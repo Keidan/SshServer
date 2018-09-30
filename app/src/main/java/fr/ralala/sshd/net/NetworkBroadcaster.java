@@ -1,4 +1,4 @@
-package org.ralala.android.ssh.server.net;
+package fr.ralala.sshd.net;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,100 +19,127 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
+
 /**
- *******************************************************************************
+ * ******************************************************************************
  * <p><b>Project SshServer</b><br/>
  * Network helper functions
  * </p>
- * @author Keidan
  *
- *******************************************************************************
+ * @author Keidan
+ * <p>
+ * ******************************************************************************
  */
 public class NetworkBroadcaster extends BroadcastReceiver {
-  private static final Pattern  IPV4_PATTERN  = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
-  private static final String   UNKNOWN       = "UNKNOWN";
-  private INetworkBroadcaster   handler       = null;
-  private TelephonyManager      tm            = null;
-  private Context               context       = null;
-  private ConnectivityManager   cm            = null;
+  private static final Pattern IPV4_PATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
+  private NetworkStatusListener mNetworkStatusListener;
+  private TelephonyManager mTelephonyManager;
+  private Context mContext;
+  private ConnectivityManager mConnectivityManager;
 
-  public NetworkBroadcaster(final Context c, final INetworkBroadcaster handler) {
-    this.context = c;
-    this.handler = handler;
-    tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-    cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+  public NetworkBroadcaster(final Context c, final NetworkStatusListener networkStatusListener) {
+    mContext = c;
+    mNetworkStatusListener = networkStatusListener;
+    mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+    mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 
+  /**
+   * Starts broadcaster for the Wi-Fi states changes.
+   */
   public void load() {
     /* Start broadcaster for the Wi-Fi and the Bluetooth states changes */
     IntentFilter filters = new IntentFilter();
     filters.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-    context.registerReceiver(this, filters);
-    PhoneStateListener callStateListener = new PhoneStateListener(){
-      public void onDataConnectionStateChanged(int state){
-        switch(state){
+    mContext.registerReceiver(this, filters);
+    PhoneStateListener callStateListener = new PhoneStateListener() {
+      public void onDataConnectionStateChanged(int state) {
+        switch (state) {
           case TelephonyManager.DATA_CONNECTED:
-            if(!isWifi()) {
+            if (!isWifi()) {
               Log.d(getClass().getSimpleName(), "DATA_CONNECTED");
-              handler.networkStatus(false);
+              mNetworkStatusListener.onNetworkStatus(false);
             }
             break;
           case TelephonyManager.DATA_DISCONNECTED:
-            if(!isWifi()) {
+            if (!isWifi()) {
               Log.d(getClass().getSimpleName(), "DATA_DISCONNECTED");
-              handler.networkStatus(true);
+              mNetworkStatusListener.onNetworkStatus(true);
             }
             break;
         }
       }
     };
-    tm.listen(callStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
+    mTelephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
   }
 
+  /**
+   * Stops broadcaster for the Wi-Fi states changes.
+   */
   public void unload() {
-    context.unregisterReceiver(this);
+    mContext.unregisterReceiver(this);
   }
 
   @Override
   public void onReceive(Context context, Intent intent) {
     final String action = intent.getAction();
-    if(action.equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
+    if (action != null && action.equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
       int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-      switch(state) {
+      switch (state) {
         case WifiManager.WIFI_STATE_DISABLED:
         case WifiManager.WIFI_STATE_DISABLING:
           Log.d(getClass().getSimpleName(), "WIFI_STATE_DISABLED/WIFI_STATE_DISABLING");
-          handler.networkStatus(true);
+          mNetworkStatusListener.onNetworkStatus(true);
           break;
         case WifiManager.WIFI_STATE_ENABLED:
         case WifiManager.WIFI_STATE_ENABLING:
           Log.d(getClass().getSimpleName(), "WIFI_STATE_ENABLED/WIFI_STATE_ENABLING");
-          handler.networkStatus(false);
+          mNetworkStatusListener.onNetworkStatus(false);
           break;
       }
     }
   }
 
+  /**
+   * Converts an IP to digital format into an IPv4 String.
+   * @param i The IP address to convert.
+   * @return String (IPv4).
+   */
   public static String intToIp(int i) {
-    return ( i & 0xFF) + "." + ((i >> 8 ) & 0xFF) + "." + ((i >> 16 ) & 0xFF) + "." + ((i >> 24 ) & 0xFF );
- }
+    return (i & 0xFF) + "." + ((i >> 8) & 0xFF) + "." + ((i >> 16) & 0xFF) + "." + ((i >> 24) & 0xFF);
+  }
 
+  /**
+   * Tests if the input IP address corresponds to an IP address in v4 format.
+   * @param ip The IP address to test.
+   * @return boolean
+   */
   public static boolean isIPv4Address(final String ip) {
     return IPV4_PATTERN.matcher(ip).matches();
   }
 
+  /**
+   * Tests if the connectivity type is WiFi.
+   * @return boolean
+   */
   private boolean isWifi() {
-    NetworkInfo info = cm.getActiveNetworkInfo();
+    NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
     return (info != null && info.getType() == ConnectivityManager.TYPE_WIFI);
   }
 
+  /**
+   * Returns the current IP address.
+   * @return IP or R.string.unknown
+   */
   public String getCurrentIpAddress() {
+    final String unknown = mContext.getString(R.string.unknown);
     try {
-      // Skip if no connection, or background data disabled
-      if (cm.getActiveNetworkInfo() == null || !cm.getBackgroundDataSetting()) return UNKNOWN;
+      // Skip if no connection
+      if (mConnectivityManager.getActiveNetworkInfo() == null) return unknown;
       if (isWifi()) {
         Log.d(getClass().getSimpleName(), "wifi mode");
-        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        if(wifi == null) return unknown;
         WifiInfo wifiInfo = wifi.getConnectionInfo();
         final String ip = intToIp(wifiInfo.getIpAddress());
         Log.d(getClass().getSimpleName(), "wifi: " + ip);
@@ -124,13 +151,13 @@ public class NetworkBroadcaster extends BroadcastReceiver {
         }
       } else {
         Log.d(getClass().getSimpleName(), "gsm mode");
-        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
           NetworkInterface intf = en.nextElement();
-          for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+          for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
             InetAddress inetAddress = enumIpAddr.nextElement();
             if (!inetAddress.isLoopbackAddress() && Inet4Address.class.isInstance(inetAddress)) {
-              Log.d(getClass().getSimpleName(), "gsm: " + inetAddress.getHostAddress().toString());
-              return inetAddress.getHostAddress().toString();
+              Log.d(getClass().getSimpleName(), "gsm: " + inetAddress.getHostAddress());
+              return inetAddress.getHostAddress();
             }
           }
         }
@@ -139,7 +166,7 @@ public class NetworkBroadcaster extends BroadcastReceiver {
       Log.e(NetworkBroadcaster.class.getSimpleName(),
           "Exception in Get IP Address: " + ex.getMessage(), ex);
     }
-    return "UNKNOWN";
+    return unknown;
   }
 
 }

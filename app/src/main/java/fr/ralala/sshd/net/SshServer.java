@@ -1,0 +1,128 @@
+package fr.ralala.sshd.net;
+
+import android.os.Environment;
+import android.util.Log;
+
+import org.apache.sshd.common.NamedFactory;
+import org.apache.sshd.common.session.Session;
+import org.apache.sshd.common.util.net.SshdSocketAddress;
+import org.apache.sshd.server.auth.UserAuth;
+import org.apache.sshd.server.auth.UserAuthNoneFactory;
+import org.apache.sshd.server.auth.password.UserAuthPasswordFactory;
+import org.apache.sshd.server.command.Command;
+import org.apache.sshd.server.forward.ForwardingFilter;
+import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
+import org.apache.sshd.server.shell.ProcessShellFactory;
+import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.apache.sshd.server.scp.ScpCommandFactory;
+
+
+import java.io.File;
+import java.security.Security;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * ******************************************************************************
+ * <p><b>Project SshServer</b><br/>
+ * Representation of a SSH server
+ * </p>
+ *
+ * @author Keidan
+ * <p>
+ * ******************************************************************************
+ */
+public class SshServer {
+  private org.apache.sshd.server.SshServer mSshServer = null;
+  private SshServerEntry mSshServerEntry = null;
+
+  public SshServer() {
+    /* Fix home */
+    File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    System.setProperty("user.home", dir.getParent());
+    Security.addProvider(new BouncyCastleProvider());
+  }
+
+  /**
+   * Sets the SSH server entry.
+   * @param sse SshServerEntry to set.
+   */
+  public void setSshServerEntry(final SshServerEntry sse) {
+    mSshServerEntry = sse;
+  }
+
+  /**
+   * Starts the SSH server.
+   * @param host The host address to use.
+   * @throws Exception If a network exception occurs.
+   */
+  public void start(final String host) throws Exception {
+    if (mSshServer != null) return;
+    /* create the server instance and set the default port */
+    mSshServer = org.apache.sshd.server.SshServer.setUpDefaultServer();
+    //mSshServer.getProperties().put(org.apache.sshd.server.SshServer.IDLE_TIMEOUT, "10000");
+    mSshServer.getProperties().put(org.apache.sshd.server.SshServer.AUTH_TIMEOUT, "100000");
+    mSshServer.getProperties().put("welcome-banner", "Welcome to android SshServer\n");
+    mSshServer.setHost(host);
+    //mSshServer.setReuseAddress(true);
+    mSshServer.setPort(mSshServerEntry.getPort());
+    mSshServer.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
+    /* fix shell */
+    mSshServer.setShellFactory(new ProcessShellFactory("/system/bin/sh", "-i", "-l"));
+
+
+    List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>();
+    if (mSshServerEntry.isAuthAnonymous())
+      /* Allow anonymous connections */
+      userAuthFactories.add(UserAuthNoneFactory.INSTANCE);
+    else {
+      userAuthFactories.add(UserAuthPasswordFactory.INSTANCE);
+      mSshServer.setPasswordAuthenticator((username, password, session) ->
+          mSshServerEntry.getUsername().equals(username) && mSshServerEntry.getPassword().equals(password)
+      );
+    }
+    mSshServer.setUserAuthFactories(userAuthFactories);
+    /* Enable SFTP commands */
+    mSshServer.setCommandFactory(new ScpCommandFactory());
+    List<NamedFactory<Command>> namedFactoryList = new ArrayList<>();
+    namedFactoryList.add(new SftpSubsystemFactory());
+    mSshServer.setSubsystemFactories(namedFactoryList);
+    mSshServer.setForwardingFilter(new ForwardingFilter() {
+      @Override
+      public boolean canForwardX11(Session session, String requestType) {
+        return true;
+      }
+      @Override
+      public boolean canListen(SshdSocketAddress address, Session session) {
+        return true;
+      }
+      @Override
+      public boolean canConnect(Type type, SshdSocketAddress address, Session session) {
+        return true;
+      }
+      @Override
+      public boolean canForwardAgent(Session session, String requestType) {
+        return true;
+      }
+    });
+    /* start the server */
+    mSshServer.start();
+  }
+
+  /**
+   * Stops the SSH server.
+   */
+  public void stop() {
+    if (mSshServer != null) {
+      try {
+        mSshServer.stop(true);
+      } catch (Exception e) {
+        Log.e(getClass().getSimpleName(), "Exception: " + e.getMessage(), e);
+      }
+      mSshServer = null;
+    }
+  }
+
+}
