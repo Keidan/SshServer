@@ -163,8 +163,13 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
           }
         }
         if(!spAuthMode.getSelectedItem().equals(unknown)) {
-          username = tusername.getText().toString();
-          password = tpassword.getText().toString();
+          if(spAuthMode.getSelectedItem().equals(getString(R.string.anonymous))) {
+            username = null;
+            password = null;
+          } else {
+            username = tusername.getText().toString();
+            password = tpassword.getText().toString();
+          }
         }
         factory.add(new SshServerEntry(name, Integer.parseInt(port), username, password));
         mAdapter.notifyDataSetChanged();
