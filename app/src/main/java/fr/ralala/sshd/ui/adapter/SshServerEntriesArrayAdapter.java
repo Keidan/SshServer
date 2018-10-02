@@ -93,7 +93,7 @@ public class SshServerEntriesArrayAdapter extends ArrayAdapter<SshServerEntry> {
               r.getString(R.string.lbl_userpwd) + " " +
               (o.getPassword() == null ? r.getString(R.string.no) : r.getString(R.string.yes));
         else
-          d += r.getString(R.string.anonymous);
+          d += "\n" + r.getString(R.string.anonymous);
         holder.data.setText(d);
       }
       /* Show the popup menu if the user click on the 3-dots item. */
