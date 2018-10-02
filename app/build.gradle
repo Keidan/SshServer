@@ -1,73 +1,92 @@
 apply plugin: 'com.android.application'
 
 ext {
-    supportVersion = "27.1.1"
-    sshdCoreVersion = "2.0.0"
+  supportVersion = "28.0.0"
+  sshdCoreVersion = "2.0.0"
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.android.support:appcompat-v7:$supportVersion"
-    implementation "com.android.support:support-v4:$supportVersion"
-    implementation "com.android.support:design:$supportVersion"
-    implementation "com.android.support:support-compat:$supportVersion"
-    implementation group: 'org.apache.sshd', name: 'sshd-core', version: "$sshdCoreVersion"
-    implementation group: 'org.apache.sshd', name: 'sshd-scp', version: "$sshdCoreVersion"
-    implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: "$sshdCoreVersion"
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  implementation "com.android.support:appcompat-v7:$supportVersion"
+  implementation "com.android.support:support-v4:$supportVersion"
+  implementation "com.android.support:design:$supportVersion"
+  implementation "com.android.support:support-compat:$supportVersion"
+  implementation group: 'org.apache.sshd', name: 'sshd-core', version: "$sshdCoreVersion"
+  implementation group: 'org.apache.sshd', name: 'sshd-scp', version: "$sshdCoreVersion"
+  implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: "$sshdCoreVersion"
 }
 
 android {
-    compileSdkVersion 26
-    defaultConfig {
-        applicationId "org.ralala.android.ssh.server"
-        minSdkVersion 26
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  compileSdkVersion 28
+  buildToolsVersion "28.0.2"
+  defaultConfig {
+    applicationId "org.ralala.android.ssh.server"
+    minSdkVersion 26
+    targetSdkVersion 26
+    versionCode 2
+    versionName "1.2"
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    ndk {
+      abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+      moduleName "native-process-ptm"
     }
-    signingConfigs {
-        config {
-            keyAlias 'MyAndroidKey'
-            keyPassword 'myKeyPassword'
-            storeFile file('android.jks')
-            storePassword 'myStorePassword'
-        }
+
+    externalNativeBuild {
+      cmake {
+        cppFlags "-std=c++11"
+      }
     }
-    buildTypes {
-        release {
-            zipAlignEnabled true
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
-        }
-        debug {
-            // to debug ProGuard rules
-            minifyEnabled false
-            signingConfig signingConfigs.config
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
-        }
+  }
+
+  externalNativeBuild {
+    cmake {
+      path 'src/main/cpp/CMakeLists.txt'
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  signingConfigs {
+    config {
+      keyAlias 'MyAndroidKey'
+      keyPassword 'myKeyPassword'
+      storeFile file('android.jks')
+      storePassword 'myStorePassword'
     }
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES.txt'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/notice.txt'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/dependencies.txt'
-        exclude 'META-INF/LGPL2.1'
+  }
+  buildTypes {
+    release {
+      zipAlignEnabled true
+      minifyEnabled true
+      shrinkResources true
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.config
     }
-    lintOptions {
-        disable 'InvalidPackage'
+    debug {
+      // to debug ProGuard rules
+      minifyEnabled false
+      signingConfig signingConfigs.config
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
     }
-    buildToolsVersion '27.0.3'
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  packagingOptions {
+    exclude 'META-INF/DEPENDENCIES.txt'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/NOTICE.txt'
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/DEPENDENCIES'
+    exclude 'META-INF/notice.txt'
+    exclude 'META-INF/license.txt'
+    exclude 'META-INF/dependencies.txt'
+    exclude 'META-INF/LGPL2.1'
+  }
+  lintOptions {
+    disable 'InvalidPackage'
+  }
+  buildToolsVersion '28.0.2'
 }
 

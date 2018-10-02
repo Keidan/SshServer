@@ -12,7 +12,6 @@ import org.apache.sshd.server.auth.password.UserAuthPasswordFactory;
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.forward.ForwardingFilter;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-import org.apache.sshd.server.shell.ProcessShellFactory;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.apache.sshd.server.scp.ScpCommandFactory;
@@ -22,6 +21,9 @@ import java.io.File;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
+
+import fr.ralala.sshd.net.ptm.ShellConfiguration;
+import fr.ralala.sshd.net.ptm.ShellPTM;
 
 
 /**
@@ -41,7 +43,7 @@ public class SshServer {
   public SshServer() {
     /* Fix home */
     File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-    System.setProperty("user.home", dir.getParent());
+    System.setProperty("user.home", dir.getParentFile().getAbsolutePath());
     Security.addProvider(new BouncyCastleProvider());
   }
 
@@ -70,8 +72,9 @@ public class SshServer {
     mSshServer.setPort(mSshServerEntry.getPort());
     mSshServer.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
     /* fix shell */
-    mSshServer.setShellFactory(new ProcessShellFactory("/system/bin/sh", "-i", "-l"));
-
+    mSshServer.setShellFactory(new ShellPTM(
+        new ShellConfiguration(System.getProperty("user.home"), "root", "sdcard_rw", true),
+        "/system/bin/sh", "-i", "-l"));
 
     List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>();
     if (mSshServerEntry.isAuthAnonymous())

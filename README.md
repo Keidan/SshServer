@@ -3,16 +3,19 @@ SshServer
 
 (GPL) Android SSH server (SSH/SCP/SFTP) is a FREE software.
 
-This application create some instances of SSH servers (SSH/SCP/SFTP).
+This application allows you to create several instances of SSH servers (SSH/SCP/SFTP).
 
-Note that access to the'sh' file (/system/bin/sh) seems to require a routed device.
+For non-rooted devices, the functionalities are severely limited (permission issues).
 
+To limit (delete) issues related to /system/bin/sh and tty (below)
 
-Without a routed device, the message below appears and the features are severely degraded:
 * /system/bin/sh: can't find: tty fd No such device or address.
 * /system/bin/sh: warning: won't have full job control.
 
-It is also possible that a new version of busybox may need to be installed to extend the shell's functionality.
+The process management is done directly via a native code with the direct use of the character file /dev/ptm.
+
+
+__IMPORTANT:__ I don't know why, but, the code doesn't work properly if the build variant is not set to "debug".
 
 
 Instructions
@@ -26,6 +29,11 @@ download the software :
 	git clone git@github.com:Keidan/SshServer
 	cd SshServer
  	Use with android studio
+
+	
+/!\ To compile this project, you must also install the CMAKE, LLDB (debug only) and the NDK packages.
+
+(see https://codelabs.developers.google.com/codelabs/android-studio-cmake)
 
 License (like GPL)
 ==================
