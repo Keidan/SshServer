@@ -1,101 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:paddingBottom="@dimen/activity_vertical_margin"
+  android:paddingLeft="@dimen/activity_horizontal_margin"
+  android:paddingRight="@dimen/activity_horizontal_margin"
+  android:paddingTop="@dimen/activity_vertical_margin">
+
+  <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
+
+    <android.support.design.widget.TextInputLayout
+      android:id="@+id/tilName"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentTop="true">
+
+      <android.support.design.widget.TextInputEditText
+        android:id="@+id/txtName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:hint="@string/lbl_name"
+        android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+      android:id="@+id/tilPort"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_below="@id/tilName">
+
+      <android.support.design.widget.TextInputEditText
+        android:id="@+id/txtPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/lbl_port"
+        android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+      android:id="@+id/lblAuthMode"
+      style="@style/InputLabel"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_below="@id/tilPort"
+      android:paddingTop="10dp"
+      android:text="@string/auth_mode" />
+
+    <Spinner
+      android:id="@+id/spAuthMode"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_below="@id/lblAuthMode" />
+
+    <android.support.design.widget.TextInputLayout
+      android:id="@+id/tilUsername"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_below="@id/spAuthMode"
+      android:visibility="gone">
+
+      <android.support.design.widget.TextInputEditText
+        android:id="@+id/txtUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/lbl_username"
+        android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
 
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tilName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true">
+    <android.support.design.widget.TextInputLayout
+      android:id="@+id/tilUserpwd"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_below="@id/tilUsername"
+      android:visibility="gone"
+      app:passwordToggleEnabled="true"
+      app:passwordToggleTint="@color/colorAccent">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/txtName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lbl_name"
-                android:inputType="text" />
-        </android.support.design.widget.TextInputLayout>
+      <android.support.design.widget.TextInputEditText
+        android:id="@+id/txtUserpwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/lbl_username"
+        android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tilPort"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/tilName">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/txtPort"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lbl_port"
-                android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
-
-        <TextView
-            android:id="@+id/lblAuthMode"
-            style="@style/InputLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/tilPort"
-            android:paddingTop="10dp"
-            android:text="@string/auth_mode" />
-
-        <Spinner
-            android:id="@+id/spAuthMode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/lblAuthMode"/>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tilUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/spAuthMode"
-            android:visibility="gone">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/txtUsername"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lbl_username"
-                android:inputType="text" />
-        </android.support.design.widget.TextInputLayout>
-
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tilUserpwd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/tilUsername"
-            android:visibility="gone"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/colorAccent">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/txtUserpwd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lbl_username"
-                android:inputType="textPassword" />
-        </android.support.design.widget.TextInputLayout>
-
-    </RelativeLayout>
+  </RelativeLayout>
 
 </ScrollView>

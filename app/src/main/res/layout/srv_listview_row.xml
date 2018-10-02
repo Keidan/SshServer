@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="10dp">
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@null"
-        android:paddingEnd="10dp"
-        android:paddingStart="0dp" />
+  <ImageView
+    android:id="@+id/icon"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:contentDescription="@null"
+    android:paddingEnd="10dp"
+    android:paddingStart="0dp" />
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/icon"
-        android:singleLine="true"
-        android:textIsSelectable="false"
-        android:textStyle="bold"
-        android:layout_alignEnd="@id/menu"/>
+  <TextView
+    android:id="@+id/name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignEnd="@id/menu"
+    android:layout_alignParentTop="true"
+    android:layout_toEndOf="@+id/icon"
+    android:singleLine="true"
+    android:textIsSelectable="false"
+    android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/name"
-        android:layout_toEndOf="@+id/icon"
-        android:textColor="#595656"
-        android:textIsSelectable="false" />
+  <TextView
+    android:id="@+id/data"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/name"
+    android:layout_toEndOf="@+id/icon"
+    android:textColor="#595656"
+    android:textIsSelectable="false" />
 
 
-    <ImageView
-        android:id="@+id/menu"
-        android:layout_width="30dp"
-        android:layout_height="50dp"
-        android:layout_gravity="end"
-        android:src="@drawable/ic_dots_3"
-        android:layout_alignParentEnd="true"
-        android:contentDescription="@null"/>
+  <ImageView
+    android:id="@+id/menu"
+    android:layout_width="30dp"
+    android:layout_height="50dp"
+    android:layout_alignParentEnd="true"
+    android:layout_gravity="end"
+    android:contentDescription="@null"
+    android:src="@drawable/ic_dots_3" />
 </RelativeLayout>

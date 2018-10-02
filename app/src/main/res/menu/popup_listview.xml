@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/start"
-        android:title="@string/start"
-        android:icon="@mipmap/ic_server_start"
-        android:checkable="false"/>
-    <item
-        android:id="@+id/stop"
-        android:title="@string/stop"
-        android:icon="@mipmap/ic_server_stop"
-        android:checkable="false" />
+  <item
+    android:id="@+id/start"
+    android:checkable="false"
+    android:icon="@mipmap/ic_server_start"
+    android:title="@string/start" />
+  <item
+    android:id="@+id/stop"
+    android:checkable="false"
+    android:icon="@mipmap/ic_server_stop"
+    android:title="@string/stop" />
 
-    <item
-        android:id="@+id/edit"
-        android:title="@string/edit"
-        android:icon="@mipmap/ic_edit"
-        android:checkable="false" />
+  <item
+    android:id="@+id/edit"
+    android:checkable="false"
+    android:icon="@mipmap/ic_edit"
+    android:title="@string/edit" />
 
-    <item
-        android:id="@+id/delete"
-        android:title="@string/delete"
-        android:icon="@mipmap/ic_garbage"
-        android:checkable="false" />
+  <item
+    android:id="@+id/delete"
+    android:checkable="false"
+    android:icon="@mipmap/ic_garbage"
+    android:title="@string/delete" />
 </menu>
