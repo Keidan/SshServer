@@ -141,8 +141,8 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
       SshServerEntryFactory factory = mApp.getSshServerEntryFactory();
       /* Click on the Positive button (OK) */
       if(whichButton == DialogInterface.BUTTON_POSITIVE) {
-        final String name = tname.getText().toString().trim();
-        final String port = tport.getText().toString().trim();
+        final String name = tname.getText() == null ? "" : tname.getText().toString().trim();
+        final String port = tport.getText() == null ? "" : tport.getText().toString().trim();
         String username = null;
         String password = null;
         if(name.isEmpty()) {
@@ -167,8 +167,8 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
             username = null;
             password = null;
           } else {
-            username = tusername.getText().toString();
-            password = tpassword.getText().toString();
+            username = tusername.getText() == null ? null : tusername.getText().toString();
+            password = tpassword.getText() == null ? null : tpassword.getText().toString();
           }
         }
         factory.add(new SshServerEntry(name, Integer.parseInt(port), username, password));
