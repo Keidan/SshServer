@@ -14,6 +14,7 @@ public class ShellConfiguration {
   private String mHome;
   private String mUser;
   private String mGroup;
+  private String mShell;
   private boolean mOverride;
 
   /**
@@ -21,45 +22,15 @@ public class ShellConfiguration {
    * @param home The default home directory.
    * @param user The default user name.
    * @param group The default group name.
+   * @param shell The default shell path.
    * @param override If true, the variable will be overloaded, otherwise the configuration value will be ignored.
    */
-  public ShellConfiguration(String home, String user, String group, boolean override) {
+  public ShellConfiguration(String home, String user, String group, String shell, boolean override) {
     mHome = home;
     mUser = user;
     mGroup = group;
+    mShell = shell;
     mOverride = override;
-  }
-
-  /**
-   * Sets the override state.
-   * @param override If true, the variable will be overloaded, otherwise the configuration value will be ignored.
-   */
-  public void setOverride(boolean override) {
-    mOverride = override;
-  }
-
-  /**
-   * Sets the default home directory.
-   * @param home The default home directory.
-   */
-  public void setHome(String home) {
-    mHome = home;
-  }
-
-  /**
-   * Sets the default user name.
-   * @param user The default user name.
-   */
-  public void setUser(String user) {
-    mUser = user;
-  }
-
-  /**
-   * Sets the default group name.
-   * @param group The default group name.
-   */
-  public void setGroup(String group) {
-    mGroup = group;
   }
 
 
@@ -89,5 +60,12 @@ public class ShellConfiguration {
    */
   public String getGroup() {
     return mGroup;
+  }
+
+  /**
+   * Returns the default shell path.
+   */
+  public String getShell() {
+    return mShell;
   }
 }

@@ -72,9 +72,11 @@ public class SshServer {
     mSshServer.setPort(mSshServerEntry.getPort());
     mSshServer.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
     /* fix shell */
+    final String shell = "/system/bin/sh";
     mSshServer.setShellFactory(new ShellPTM(
-        new ShellConfiguration(System.getProperty("user.home"), "root", "sdcard_rw", true),
-        "/system/bin/sh", "-i", "-l"));
+        new ShellConfiguration(System.getProperty("user.home"),
+            "shell", "sdcard_rw", shell, true),
+        shell, "-i", "-l"));
 
     List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>();
     if (mSshServerEntry.isAuthAnonymous())

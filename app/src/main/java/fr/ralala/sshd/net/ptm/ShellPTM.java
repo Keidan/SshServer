@@ -27,7 +27,12 @@ import java.util.Map;
  * ******************************************************************************
  */
 public class ShellPTM implements Factory<Command>, InvertedShell {
-
+  private static final int FLAG_HOME = 1 << 2;
+  private static final int FLAG_USER = 1 << 3;
+  private static final int FLAG_GROUP = 1 << 4;
+  private static final int FLAG_SHELL = 1 << 5;
+  private static final int FLAG_LOGNAME = 1 << 6;
+  private static final int FLAG_ALL = FLAG_HOME|FLAG_USER|FLAG_GROUP|FLAG_SHELL|FLAG_LOGNAME;
   private String mCmd;
   private String [] mArgs;
   private NativeProcessPTM mNativeProcessPTM;
@@ -119,28 +124,38 @@ public class ShellPTM implements Factory<Command>, InvertedShell {
   public void start(Environment env) throws IOException {
     Map<String, String> e = env.getEnv();
     List<String> envP = new ArrayList<>();
-    boolean foundHome = false, foundUser = false, foundGroup = false;
+    int flags = FLAG_ALL;
     for (Map.Entry<String, String> entry : e.entrySet()) {
       String key = entry.getKey();
       String value = entry.getValue();
       if(key.equals("HOME") && value.isEmpty() && mShellConfiguration.isOverride()) {
         value = mShellConfiguration.getHome();
-        foundHome = true;
+        flags &= ~FLAG_HOME;
       } else if(key.equals("USER") && value.isEmpty() && mShellConfiguration.isOverride()) {
         value = mShellConfiguration.getUser();
-        foundUser = true;
+        flags &= ~FLAG_USER;
+      } else if(key.equals("LOGNAME") && value.isEmpty() && mShellConfiguration.isOverride()) {
+        value = mShellConfiguration.getUser();
+        flags &= ~FLAG_LOGNAME;
       } else if(key.equals("GROUP") && value.isEmpty() && mShellConfiguration.isOverride()) {
         value = mShellConfiguration.getGroup();
-        foundGroup = true;
+        flags &= ~FLAG_GROUP;
+      } else if(key.equals("SHELL") && value.isEmpty() && mShellConfiguration.isOverride()) {
+        value = mShellConfiguration.getShell();
+        flags &= ~FLAG_SHELL;
       }
       envP.add(key + "=" + value);
     }
-    if(!foundHome)
+    if((flags & FLAG_HOME) != 0)
       envP.add("HOME=" + mShellConfiguration.getHome());
-    if(!foundUser)
+    if((flags & FLAG_USER) != 0)
       envP.add("USER=" + mShellConfiguration.getUser());
-    if(!foundGroup)
+    if((flags & FLAG_LOGNAME) != 0)
+      envP.add("LOGNAME=" + mShellConfiguration.getUser());
+    if((flags & FLAG_GROUP) != 0)
       envP.add("GROUP=" + mShellConfiguration.getGroup());
+    if((flags & FLAG_SHELL) != 0)
+      envP.add("SHELL=" + mShellConfiguration.getShell());
     mNativeProcessPTM = NativeProcessPTM.create(mCmd, mArgs, envP.toArray(new String[] { }));
   }
 
