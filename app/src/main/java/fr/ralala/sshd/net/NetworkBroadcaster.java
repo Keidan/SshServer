@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -123,8 +125,12 @@ public class NetworkBroadcaster extends BroadcastReceiver {
    * @return boolean
    */
   private boolean isWifi() {
-    NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
-    return (info != null && info.getType() == ConnectivityManager.TYPE_WIFI);
+    final Network network = mConnectivityManager.getActiveNetwork();
+    final NetworkCapabilities capabilities = mConnectivityManager.getNetworkCapabilities(network);
+    return capabilities != null
+        && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+        && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
   }
 
   /**
