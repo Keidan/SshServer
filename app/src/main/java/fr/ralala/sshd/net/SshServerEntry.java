@@ -61,7 +61,7 @@ public class SshServerEntry {
    * Sets the user name to use.
    * @param username The new user name.
    */
-  public void setUsername(final String username) {
+  private void setUsername(final String username) {
     if (username == null || username.equals("null")) mUsername = null;
     else mUsername = username;
   }
@@ -70,7 +70,7 @@ public class SshServerEntry {
    * Sets the user password to use.
    * @param password The new password.
    */
-  public void setPassword(final String password) {
+  private void setPassword(final String password) {
     if (password == null || password.equals("null")) mPassword = null;
     else mPassword = password;
   }
@@ -87,7 +87,7 @@ public class SshServerEntry {
    * Sets the port used by the server.
    * @param port The new port.
    */
-  public void setPort(final int port) {
+  private void setPort(final int port) {
     mPort = port;
   }
 
