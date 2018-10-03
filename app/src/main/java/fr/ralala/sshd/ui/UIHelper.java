@@ -1,21 +1,23 @@
 package fr.ralala.sshd.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
+import android.view.Gravity;
+import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.ralala.android.ssh.server.R;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 /**
  * ******************************************************************************
@@ -70,27 +72,18 @@ public class UIHelper {
   }
 
   /**
-   * Forces the icons display in the popup menu
-   * @param popup The associated popup menu
+   * FForces the display of icons in the context menu and displays it.
+   * @param c The Android context.
+   * @param popup The associated popup menu.
+   * @param view The view that has been passed to the constructor of the PopupMenu instance.
    */
-  public static void forcePopupMenuIcons(final PopupMenu popup) {
-    try {
-      Field[] fields = popup.getClass().getDeclaredFields();
-      for (Field field : fields) {
-        if ("mPopup".equals(field.getName())) {
-          field.setAccessible(true);
-          Object menuPopupHelper = field.get(popup);
-          Class<?> classPopupHelper = Class.forName(menuPopupHelper
-              .getClass().getName());
-          Method setForceIcons = classPopupHelper.getMethod(
-              "setForceShowIcon", boolean.class);
-          setForceIcons.invoke(menuPopupHelper, true);
-          break;
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+
+  @SuppressLint("RestrictedApi")
+  public static void forcePopupMenuIconsAndShow(final Context c, PopupMenu popup, View view) {
+    MenuPopupHelper menuHelper = new MenuPopupHelper(c, (MenuBuilder) popup.getMenu(), view);
+    menuHelper.setForceShowIcon(true);
+    menuHelper.setGravity(Gravity.END);
+    menuHelper.show();
   }
 
   /**

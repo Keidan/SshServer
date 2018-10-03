@@ -57,6 +57,7 @@ public class SshServerEntriesArrayAdapter extends ArrayAdapter<SshServerEntry> {
     return mItems.get(i);
   }
 
+
   @Override
   public @NonNull View getView(final int position, final View convertView,
                       @NonNull final ViewGroup parent) {
@@ -102,13 +103,12 @@ public class SshServerEntriesArrayAdapter extends ArrayAdapter<SshServerEntry> {
           switch (view.getId()) {
             case R.id.menu:
               final PopupMenu popup = new PopupMenu(mContext, view);
-              /* Force the icons display */
-              UIHelper.forcePopupMenuIcons(popup);
               popup.getMenuInflater().inflate(R.menu.popup_listview, popup.getMenu());
               /* Init the default behaviour */
               popup.getMenu().findItem(R.id.stop).setEnabled(o.isStarted());
               popup.getMenu().findItem(R.id.start).setEnabled(!o.isStarted());
-              popup.show();
+              /* Force the icons display and displays the popupmenu */
+              UIHelper.forcePopupMenuIconsAndShow(mContext, popup, view);
               popup.setOnMenuItemClickListener((item) -> {
                 boolean started = false;
                 switch (item.getItemId()) {
