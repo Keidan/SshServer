@@ -1,5 +1,6 @@
 package fr.ralala.sshd.ui;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -76,6 +78,16 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
     ListView lv = findViewById(R.id.list);
     mAdapter = new SshServerEntriesArrayAdapter(this, mApp.getSshServerEntryFactory().list(), this);
     lv.setAdapter(mAdapter);
+
+    /* permissions */
+    ActivityCompat.requestPermissions(this, new String[] {
+        Manifest.permission.ACCESS_NETWORK_STATE,
+        Manifest.permission.ACCESS_WIFI_STATE,
+        Manifest.permission.INTERNET,
+        Manifest.permission.VIBRATE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+    }, 1);
   }
 
 

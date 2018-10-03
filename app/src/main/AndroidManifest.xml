@@ -11,8 +11,9 @@
   <uses-permission android:name="android.permission.INTERNET" />
   <!-- Vibrator used by ssh -->
   <uses-permission android:name="android.permission.VIBRATE" />
-  <!-- Used by ssh to write new files -->
+  <!-- Used by ssh to read/write files -->
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
   <application
     android:name="fr.ralala.sshd.SshServerApplication"
