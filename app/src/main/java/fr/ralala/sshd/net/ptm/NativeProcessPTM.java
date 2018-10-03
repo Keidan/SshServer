@@ -1,6 +1,7 @@
 package fr.ralala.sshd.net.ptm;
 
 
+
 import android.util.Log;
 
 import java.io.FileDescriptor;
@@ -9,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 
 /**
  * ******************************************************************************
@@ -28,7 +30,7 @@ public class NativeProcessPTM {
 
   @SuppressWarnings("FieldCanBeLocal")
   private int mPid = 0; /* Used from JNI code */
-  private FileDescriptor mFileDescriptor = null; /* Used from JNI code */
+  private int mDescriptor = -1; /* Used from JNI code */
   private FileOutputStream mStdIn;
   private FileInputStream mStdErr;
   private FileInputStream mStdOut;
@@ -43,14 +45,24 @@ public class NativeProcessPTM {
    *
    */
   public static NativeProcessPTM create(String cmd, String [] args, String [] env) throws IOException {
-    NativeProcessPTM me = create0(cmd, args, env);
-    if(me != null) {
-      me.mStdOut = new FileInputStream(me.mFileDescriptor);
-      me.mStdErr = new FileInputStream(me.mFileDescriptor);
-      me.mStdIn = new FileOutputStream(me.mFileDescriptor);
-      me.mAlive = true;
+    try {
+      NativeProcessPTM me = create0(cmd, args, env);
+      if (me != null) {
+        @SuppressWarnings("JavaReflectionMemberAccess")
+        Constructor<FileDescriptor> fileDescriptorConstructor = FileDescriptor.class.getDeclaredConstructor(Integer.TYPE);
+        fileDescriptorConstructor.setAccessible(true);
+        FileDescriptor fd = fileDescriptorConstructor.newInstance(me.mDescriptor);
+        fileDescriptorConstructor.setAccessible(false);
+        me.mStdOut = new FileInputStream(fd);
+        me.mStdErr = new FileInputStream(fd);
+        me.mStdIn = new FileOutputStream(fd);
+        me.mAlive = true;
+      }
+      return me;
+    } catch(Throwable t) {
+      Log.e(NativeProcessPTM.class.getSimpleName(), "Exception: " + t.getMessage(), t);
+      throw new IOException(t);
     }
-    return me;
   }
 
   /**

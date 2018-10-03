@@ -22,11 +22,10 @@
 //#include "android/log.h"
 
 /* Defines -------------------------------------------------------------------*/
-#define CLASS_FILE_DESCRIPTOR "java/io/FileDescriptor"
 #define FIELD_PID_NP "mPid"
 #define SIGNATURE_PID_NP "I"
-#define FIELD_FILE_DESCRIPTOR_NP "mFileDescriptor"
-#define SIGNATURE_FILE_DESCRIPTOR_NP "Ljava/io/FileDescriptor;"
+#define FIELD_DESCRIPTOR_NP "mDescriptor"
+#define SIGNATURE_DESCRIPTOR_NP "I"
 
 
 
@@ -69,7 +68,7 @@ static auto ptmFork(JNIEnv *jenv, pid_t* pid, std::string cmd, std::vector<char 
    */
   ptDevFd = getpt();
   if(ptDevFd < 0){
-    std::string err = "Unable to open ptm file: " + std::string(strerror(errno));
+    auto err = "Unable to open ptm file: " + std::string(strerror(errno));
     auto ex = jenv->FindClass("java/io/IOException");
     jenv->ThrowNew(ex, err.c_str());
     return -1;
@@ -86,7 +85,7 @@ static auto ptmFork(JNIEnv *jenv, pid_t* pid, std::string cmd, std::vector<char 
    * corresponding to the master referred to by fd.
    */
   if(grantpt(ptDevFd) || unlockpt(ptDevFd) || ((devname = ptsname(ptDevFd)) == 0)){
-    std::string err = "Unable to grant or unlock pt: " + std::string(strerror(errno));
+    auto err = "Unable to grant or unlock pt: " + std::string(strerror(errno));
     auto ex = jenv->FindClass("java/io/IOException");
     jenv->ThrowNew(ex, err.c_str());
     return -1;
@@ -94,7 +93,7 @@ static auto ptmFork(JNIEnv *jenv, pid_t* pid, std::string cmd, std::vector<char 
   /* Creates a new process. */
   *pid = fork();
   if(*pid < 0) {
-    std::string err = "Unable to create fork: " + std::string(strerror(errno));
+    auto err = "Unable to create fork: " + std::string(strerror(errno));
     auto ex = jenv->FindClass("java/io/IOException");
     jenv->ThrowNew(ex, err.c_str());
     return -1;
@@ -136,27 +135,6 @@ JNIEXPORT auto JNICALL Java_fr_ralala_sshd_net_ptm_NativeProcessPTM_create0
     (JNIEnv *env, jclass clazz, jstring jcmd, jobjectArray jargs, jobjectArray jarrayEnv) -> jobject {
 
   /* JAVA ID's */
-  /* Searching for the FileDescriptor class */
-  auto fileDescriptorClass = env->FindClass(CLASS_FILE_DESCRIPTOR);
-  if (fileDescriptorClass == nullptr) {
-    auto ex = env->FindClass("java/lang/NoSuchClassException");
-    env->ThrowNew(ex, "Class 'FileDescriptor' not found");
-    return nullptr;
-  }
-  /* Calculates the constructor's ID of FileDescriptor in order to instantiate it. */
-  auto fileDescriptorConstructor = env->GetMethodID(fileDescriptorClass, "<init>", "()V");
-  if (fileDescriptorConstructor == nullptr) {
-    auto ex = env->FindClass("java/lang/NoSuchMethodException");
-    env->ThrowNew(ex, "FileDescriptor: Default constructor not found");
-    return nullptr;
-  }
-  /* Retrieves the descriptor field that is declared on the java side. */
-  auto fileDescriptorFieldDescriptor = env->GetFieldID(fileDescriptorClass, "descriptor", "I");
-  if (fileDescriptorFieldDescriptor == nullptr) {
-    auto ex = env->FindClass("java/lang/NoSuchFieldException");
-    env->ThrowNew(ex, "FileDescriptor: Field 'descriptor' not found");
-    return nullptr;
-  }
   /* Calculates the constructor's ID in order to instantiate it. */
   auto nativeProcessConstructor = env->GetMethodID(clazz, "<init>", "()V");
   if (nativeProcessConstructor == nullptr) {
@@ -171,12 +149,11 @@ JNIEXPORT auto JNICALL Java_fr_ralala_sshd_net_ptm_NativeProcessPTM_create0
     env->ThrowNew(ex, "NativeProcess: Field '" FIELD_PID_NP "' not found");
     return nullptr;
   }
-
-  /* Retrieves the FileDescriptor field that is declared on the java side. */
-  auto nativeProcessFieldFileDescriptor = env->GetFieldID(clazz, FIELD_FILE_DESCRIPTOR_NP, SIGNATURE_FILE_DESCRIPTOR_NP);
-  if (nativeProcessFieldFileDescriptor == nullptr) {
+  /* Retrieves the descriptor field that is declared on the java side. */
+  auto nativeProcessFieldDescriptor = env->GetFieldID(clazz, FIELD_DESCRIPTOR_NP, SIGNATURE_DESCRIPTOR_NP);
+  if (nativeProcessFieldDescriptor == nullptr) {
     auto ex = env->FindClass("java/lang/NoSuchFieldException");
-    env->ThrowNew(ex, "NativeProcess: Field '" FIELD_FILE_DESCRIPTOR_NP "' not found");
+    env->ThrowNew(ex, "NativeProcess: Field '" FIELD_DESCRIPTOR_NP "' not found");
     return nullptr;
   }
 
@@ -209,12 +186,12 @@ JNIEXPORT auto JNICALL Java_fr_ralala_sshd_net_ptm_NativeProcessPTM_create0
     auto count = env->GetArrayLength(jarrayEnv);
     if(count != 0) {
       for (int i = 0; i < count; i++) {
-        jstring jstr =  (jstring)env->GetObjectArrayElement(jarrayEnv, i);
-        std::string str = getStringUTF(env, jstr);
-        std::size_t delim = str.find("=");
+        auto jstr =  (jstring)env->GetObjectArrayElement(jarrayEnv, i);
+        auto str = getStringUTF(env, jstr);
+        auto delim = str.find("=");
         if (delim != std::string::npos) {
-          std::string key = str.substr(0, delim);
-          std::string value = str.substr(delim + 1);
+          auto key = str.substr(0, delim);
+          auto value = str.substr(delim + 1);
           if(key.compare("COLUMNS") == 0)
             columns = std::stoi(value);
           else if(key.compare("LINES") == 0)
@@ -225,13 +202,6 @@ JNIEXPORT auto JNICALL Java_fr_ralala_sshd_net_ptm_NativeProcessPTM_create0
     }
   }
   /* We try to create an instance of the java object based on the class identifiers and the constructor identifier. */
-  auto instanceFileDescriptor = env->NewObject(fileDescriptorClass, fileDescriptorConstructor);
-  if (instanceFileDescriptor == nullptr) {
-    auto ex = env->FindClass("java/io/IOException");
-    env->ThrowNew(ex, "FileDescriptor: Unable to create a new object");
-    return nullptr;
-  }
-  /* We try to create an instance of the java object based on the class identifiers and the constructor identifier. */
   auto instanceNativeProcess = env->NewObject(clazz, nativeProcessConstructor);
   if (instanceNativeProcess == nullptr) {
     auto ex = env->FindClass("java/io/IOException");
@@ -239,10 +209,9 @@ JNIEXPORT auto JNICALL Java_fr_ralala_sshd_net_ptm_NativeProcessPTM_create0
     return nullptr;
   }
   pid_t pid;
-  int ptFd = ptmFork(env, &pid, cmd, args);
+  auto ptFd = ptmFork(env, &pid, cmd, args);
   env->SetIntField(instanceNativeProcess, nativeProcessFieldPid, pid);
-  env->SetIntField(instanceFileDescriptor, fileDescriptorFieldDescriptor, ptFd);
-  env->SetObjectField(instanceNativeProcess, nativeProcessFieldFileDescriptor, instanceFileDescriptor);
+  env->SetIntField(instanceNativeProcess, nativeProcessFieldDescriptor, ptFd);
 
   /* updates pseudo terminal size */
   if(ptFd > 0 && lines > 0 && columns > 0) {
