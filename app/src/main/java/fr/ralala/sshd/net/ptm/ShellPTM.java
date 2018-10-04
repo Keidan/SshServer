@@ -128,20 +128,15 @@ public class ShellPTM implements Factory<Command>, InvertedShell {
     for (Map.Entry<String, String> entry : e.entrySet()) {
       String key = entry.getKey();
       String value = entry.getValue();
-      if(key.equals("HOME") && value.isEmpty() && mShellConfiguration.isOverride()) {
-        value = mShellConfiguration.getHome();
+      if(key.equals("HOME") && !mShellConfiguration.isOverride()) {
         flags &= ~FLAG_HOME;
-      } else if(key.equals("USER") && value.isEmpty() && mShellConfiguration.isOverride()) {
-        value = mShellConfiguration.getUser();
+      } else if(key.equals("USER") && !mShellConfiguration.isOverride()) {
         flags &= ~FLAG_USER;
-      } else if(key.equals("LOGNAME") && value.isEmpty() && mShellConfiguration.isOverride()) {
-        value = mShellConfiguration.getUser();
+      } else if(key.equals("LOGNAME") && !mShellConfiguration.isOverride()) {
         flags &= ~FLAG_LOGNAME;
-      } else if(key.equals("GROUP") && value.isEmpty() && mShellConfiguration.isOverride()) {
-        value = mShellConfiguration.getGroup();
+      } else if(key.equals("GROUP") && !mShellConfiguration.isOverride()) {
         flags &= ~FLAG_GROUP;
-      } else if(key.equals("SHELL") && value.isEmpty() && mShellConfiguration.isOverride()) {
-        value = mShellConfiguration.getShell();
+      } else if(key.equals("SHELL") && !mShellConfiguration.isOverride()) {
         flags &= ~FLAG_SHELL;
       }
       envP.add(key + "=" + value);
