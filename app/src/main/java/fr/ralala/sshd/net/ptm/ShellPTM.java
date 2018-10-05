@@ -138,20 +138,42 @@ public class ShellPTM implements Factory<Command>, InvertedShell {
         flags &= ~FLAG_GROUP;
       } else if(key.equals("SHELL") && !mShellConfiguration.isOverride()) {
         flags &= ~FLAG_SHELL;
-      }
-      envP.add(key + "=" + value);
+      } else
+        envP.add(key + "=" + value);
     }
-    if((flags & FLAG_HOME) != 0)
+    if((flags & FLAG_HOME) != 0) {
+      removeIf(envP, "HOME=");
       envP.add("HOME=" + mShellConfiguration.getHome());
-    if((flags & FLAG_USER) != 0)
+    }
+    if((flags & FLAG_USER) != 0) {
+      removeIf(envP, "USER=");
       envP.add("USER=" + mShellConfiguration.getUser());
-    if((flags & FLAG_LOGNAME) != 0)
+    }
+    if((flags & FLAG_LOGNAME) != 0) {
+      removeIf(envP, "LOGNAME=");
       envP.add("LOGNAME=" + mShellConfiguration.getUser());
-    if((flags & FLAG_GROUP) != 0)
+    }
+    if((flags & FLAG_GROUP) != 0) {
+      removeIf(envP, "GROUP=");
       envP.add("GROUP=" + mShellConfiguration.getGroup());
-    if((flags & FLAG_SHELL) != 0)
+    }
+    if((flags & FLAG_SHELL) != 0) {
+      removeIf(envP, "SHELL=");
       envP.add("SHELL=" + mShellConfiguration.getShell());
+    }
     mNativeProcessPTM = NativeProcessPTM.create(mCmd, mArgs, envP.toArray(new String[] { }));
+  }
+
+  /**
+   * Remove if the key match with an element of the input list.
+   * @param list The list.
+   * @param key The key.
+   */
+  private void removeIf(List<String> list, String key) {
+    for(int i = 0; i < list.size(); i++) {
+      if(list.get(i).startsWith(key))
+        list.remove(i);
+    }
   }
 
   /**
@@ -162,4 +184,5 @@ public class ShellPTM implements Factory<Command>, InvertedShell {
   public void setSession(ServerSession session) {
     Log.e(getClass().getSimpleName(), "Session: " + session);
   }
+
 }
