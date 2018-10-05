@@ -13,7 +13,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import org.ralala.android.ssh.server.R;
+import fr.ralala.sshd.R;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;

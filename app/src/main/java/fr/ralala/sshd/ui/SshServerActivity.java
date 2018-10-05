@@ -27,7 +27,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.ralala.android.ssh.server.R;
+import fr.ralala.sshd.R;
 
 import fr.ralala.sshd.SshServerApplication;
 import fr.ralala.sshd.net.SshServerEntryFactory;

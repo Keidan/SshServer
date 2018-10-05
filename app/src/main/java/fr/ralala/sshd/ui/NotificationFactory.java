@@ -12,7 +12,7 @@ import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
-import org.ralala.android.ssh.server.R;
+import fr.ralala.sshd.R;
 
 import java.util.ArrayList;
 import java.util.List;

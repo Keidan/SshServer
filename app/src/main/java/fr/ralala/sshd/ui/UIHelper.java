@@ -17,7 +17,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.ralala.android.ssh.server.R;
+import fr.ralala.sshd.R;
 
 /**
  * ******************************************************************************

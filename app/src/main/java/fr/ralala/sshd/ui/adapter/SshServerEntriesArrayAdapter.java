@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.ralala.android.ssh.server.R;
+import fr.ralala.sshd.R;
 
 import fr.ralala.sshd.net.SshServerEntry;
 import fr.ralala.sshd.ui.UIHelper;
