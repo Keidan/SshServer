@@ -2,8 +2,6 @@ package fr.ralala.sshd.net.ptm;
 
 import android.os.Environment;
 
-import java.io.File;
-
 /**
  * ******************************************************************************
  * <p><b>Project SshServer</b><br/>

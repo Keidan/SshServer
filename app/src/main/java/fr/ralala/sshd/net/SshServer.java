@@ -1,6 +1,5 @@
 package fr.ralala.sshd.net;
 
-import android.os.Environment;
 import android.util.Log;
 
 import org.apache.sshd.common.NamedFactory;
@@ -17,7 +16,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.apache.sshd.server.scp.ScpCommandFactory;
 
 
-import java.io.File;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
