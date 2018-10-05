@@ -19,18 +19,12 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <fcntl.h>
-//#include "android/log.h"
 
 /* Defines -------------------------------------------------------------------*/
 #define FIELD_PID_NP "mPid"
 #define SIGNATURE_PID_NP "I"
 #define FIELD_DESCRIPTOR_NP "mDescriptor"
 #define SIGNATURE_DESCRIPTOR_NP "I"
-
-
-
-/*#define LOG_TAG "NativeProcessPTM"
-#define LOG(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)*/
 
 /* Global variables ----------------------------------------------------------*/
 
