@@ -165,4 +165,16 @@ public class SshServerEntryFactory {
     });
     return found.get();
   }
+
+  /**
+   * Finds an entry based on the value of its port.
+   * @param port The port to find.
+   * @return The entry or null if not found.
+   */
+  public SshServerEntry findByPort(int port) {
+    for(SshServerEntry e : mEntries)
+      if(e.getPort() == port)
+        return e;
+    return null;
+  }
 }
