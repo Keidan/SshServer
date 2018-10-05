@@ -30,7 +30,7 @@
 
 /* Static functions -----------------------------------------------------------*/
 /**
- * Converts a java string to c++ string.
+ * @brief Converts a java string to c++ string.
  * @param env JNI environment.
  * @param jstr java string.
  * @return c++ string
@@ -45,7 +45,7 @@ static auto getStringUTF(JNIEnv *env, jstring jstr) -> std::string {
 }
 
 /**
- * Creates a forked process using the pseudo-terminal ptm.
+ * @brief Creates a forked process using the pseudo-terminal ptm.
  * @param jenv JNI environment
  * @param pid The output PID.
  * @param cmd The command to execute.
