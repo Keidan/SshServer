@@ -39,11 +39,12 @@ import fr.ralala.sshd.net.ptm.ShellPTM;
 public class SshServer {
   private org.apache.sshd.server.SshServer mSshServer = null;
   private SshServerEntry mSshServerEntry = null;
+  private ShellConfiguration mShellConfiguration;
 
-  public SshServer() {
+  public SshServer(ShellConfiguration shellConfiguration) {
+    mShellConfiguration = shellConfiguration;
     /* Fix home */
-    File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-    System.setProperty("user.home", dir.getParentFile().getAbsolutePath());
+    System.setProperty("user.home", mShellConfiguration.getHome());
     Security.addProvider(new BouncyCastleProvider());
   }
 
@@ -72,11 +73,12 @@ public class SshServer {
     mSshServer.setPort(mSshServerEntry.getPort());
     mSshServer.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
     /* fix shell */
-    final String shell = "/system/bin/sh";
-    mSshServer.setShellFactory(new ShellPTM(
-        new ShellConfiguration(System.getProperty("user.home"),
-            "shell", "sdcard_rw", shell, true),
-        shell, "-i", "-l"));
+    if(mShellConfiguration == null)
+      mShellConfiguration = new ShellConfiguration(ShellConfiguration.DEFAULT_HOME,
+          ShellConfiguration.DEFAULT_USER, ShellConfiguration.DEFAULT_GROUP,
+          ShellConfiguration.DEFAULT_SHELL, ShellConfiguration.DEFAULT_OVERRIDE);
+    mSshServer.setShellFactory(new ShellPTM(mShellConfiguration,
+        mShellConfiguration.getShell(), "-i", "-l"));
 
     List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>();
     if (mSshServerEntry.isAuthAnonymous())

@@ -32,6 +32,10 @@
   <string name="normal">Normal</string>
   <string name="lbl_user">User:</string>
   <string name="error_return_an_exception">return an exception</string>
+  <string name="lbl_sys_override">If checked, the variables defined below will be overloaded, otherwise the configuration value will be ignored.</string>
+  <string name="lbl_sys_user">System user name:</string>
+  <string name="lbl_sys_group">System user group:</string>
+  <string name="lbl_sys_home">System home dir:</string>
 
   <string-array name="auth_mode_list">
     <item>Anonymous</item>

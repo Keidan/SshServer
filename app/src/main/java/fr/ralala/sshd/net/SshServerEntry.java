@@ -1,6 +1,8 @@
 package fr.ralala.sshd.net;
 
 
+import fr.ralala.sshd.net.ptm.ShellConfiguration;
+
 /**
  * ******************************************************************************
  * <p><b>Project SshServer</b><br/>
@@ -20,15 +22,25 @@ public class SshServerEntry {
   private SshServer mSshServer = null;
   private String mUsername = null;
   private String mPassword = null;
+  private ShellConfiguration mShellConfiguration;
 
 
-  public SshServerEntry(final String name, final int port, final String username, final String password) {
+  public SshServerEntry(final String name, final int port, final String username, final String password, ShellConfiguration shellConfiguration) {
     setName(name);
     setPort(port);
     setUsername(username);
     setPassword(password);
+    mShellConfiguration = shellConfiguration;
     mId = mStaticId;
     mStaticId++;
+  }
+
+  /**
+   * Returns the shell configuration.
+   * @return ShellConfiguration.
+   */
+  public ShellConfiguration getShellConfiguration() {
+    return mShellConfiguration;
   }
 
   /**
@@ -37,7 +49,7 @@ public class SshServerEntry {
    */
   public SshServer getSshServer() {
     if (mSshServer == null)
-      mSshServer = new SshServer();
+      mSshServer = new SshServer(mShellConfiguration);
     return mSshServer;
   }
 

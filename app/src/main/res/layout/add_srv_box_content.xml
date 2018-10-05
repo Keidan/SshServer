@@ -96,6 +96,61 @@
         android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
+    <CheckBox
+      android:id="@+id/cbSys"
+      android:layout_marginTop="5dp"
+      android:layout_alignParentStart="true"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/tilUserpwd"
+      android:text="@string/lbl_sys_override"/>
+
+
+    <android.support.design.widget.TextInputLayout
+      android:id="@+id/tilSysHome"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_below="@id/cbSys">
+
+      <android.support.design.widget.TextInputEditText
+        android:id="@+id/txtSysHome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/lbl_sys_home"
+        android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+      android:id="@+id/tilSysUser"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_below="@id/tilSysHome">
+
+      <android.support.design.widget.TextInputEditText
+        android:id="@+id/txtSysUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/lbl_sys_user"
+        android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+      android:id="@+id/tilSysGroup"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_below="@id/tilSysUser">
+
+      <android.support.design.widget.TextInputEditText
+        android:id="@+id/txtSysGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/lbl_sys_group"
+        android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
+
   </RelativeLayout>
 
 </ScrollView>

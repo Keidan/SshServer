@@ -1,5 +1,9 @@
 package fr.ralala.sshd.net.ptm;
 
+import android.os.Environment;
+
+import java.io.File;
+
 /**
  * ******************************************************************************
  * <p><b>Project SshServer</b><br/>
@@ -11,6 +15,11 @@ package fr.ralala.sshd.net.ptm;
  * ******************************************************************************
  */
 public class ShellConfiguration {
+  public static final String DEFAULT_HOME = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getParentFile().getAbsolutePath();
+  public static final String DEFAULT_USER = "shell";
+  public static final String DEFAULT_GROUP = "sdcard_rw";
+  public static final String DEFAULT_SHELL = "/system/bin/sh";
+  public static final boolean DEFAULT_OVERRIDE = true;
   private String mHome;
   private String mUser;
   private String mGroup;
@@ -26,10 +35,10 @@ public class ShellConfiguration {
    * @param override If true, the variable will be overloaded, otherwise the configuration value will be ignored.
    */
   public ShellConfiguration(String home, String user, String group, String shell, boolean override) {
-    mHome = home;
-    mUser = user;
-    mGroup = group;
-    mShell = shell;
+    mHome = home == null ? "" : home;
+    mUser = user == null ? "" : user;
+    mGroup = group == null ? "" : group;
+    mShell = shell == null ? "" : shell;
     mOverride = override;
   }
 

@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import org.ralala.android.ssh.server.R;
 
 import fr.ralala.sshd.SshServerApplication;
 import fr.ralala.sshd.net.SshServerEntryFactory;
+import fr.ralala.sshd.net.ptm.ShellConfiguration;
 import fr.ralala.sshd.ui.adapter.SshServerEntriesArrayAdapter;
 import fr.ralala.sshd.net.NetworkStatusListener;
 import fr.ralala.sshd.net.NetworkBroadcaster;
@@ -147,47 +149,56 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
     final TextInputEditText tpassword = dialogView.findViewById(R.id.txtUserpwd);
     final TextInputLayout lpassword = dialogView.findViewById(R.id.tilUserpwd);
     final TextInputLayout lusername = dialogView.findViewById(R.id.tilUsername);
+    final CheckBox cbSys = dialogView.findViewById(R.id.cbSys);
+    final TextInputEditText txtSysUser = dialogView.findViewById(R.id.txtSysUser);
+    final TextInputEditText txtSysGroup = dialogView.findViewById(R.id.txtSysGroup);
+    final TextInputEditText txtSysHome = dialogView.findViewById(R.id.txtSysHome);
+
     final Spinner spAuthMode = dialogView.findViewById(R.id.spAuthMode);
     /* Init the common listener. */
     final DialogInterface.OnClickListener ocl = (dialog, whichButton) -> {
       SshServerEntryFactory factory = mApp.getSshServerEntryFactory();
-      /* Click on the Positive button (OK) */
-      if(whichButton == DialogInterface.BUTTON_POSITIVE) {
-        final String name = tname.getText() == null ? "" : tname.getText().toString().trim();
-        final String port = tport.getText() == null ? "" : tport.getText().toString().trim();
-        String username = null;
-        String password = null;
-        if(name.isEmpty()) {
-          UIHelper.shakeError(tname, getString(R.string.error_no_name));
-          return;
-        } else if(port.isEmpty()) {
-          UIHelper.shakeError(tport, getString(R.string.error_no_port));
-          return;
-        } else if(sse == null && factory.contains(name, port)) {
+      final String name = tname.getText() == null ? "" : tname.getText().toString().trim();
+      final String port = tport.getText() == null ? "" : tport.getText().toString().trim();
+      final boolean override = cbSys.isChecked();
+      final String sysUser = txtSysUser.getText() == null ? "" : txtSysUser.getText().toString().trim();
+      final String sysGroup = txtSysGroup.getText() == null ? "" : txtSysGroup.getText().toString().trim();
+      String sysHome = txtSysHome.getText() == null ? "" : txtSysHome.getText().toString().trim();
+      String username = null;
+      String password = null;
+      if(name.isEmpty()) {
+        UIHelper.shakeError(tname, getString(R.string.error_no_name));
+        return;
+      } else if(port.isEmpty()) {
+        UIHelper.shakeError(tport, getString(R.string.error_no_port));
+        return;
+      } else if(sse == null && factory.contains(name, port)) {
+        UIHelper.showAlertDialog(SshServerActivity.this, R.string.error, R.string.error_already_present);
+        return;
+      } else if(sse != null) {
+        factory.remove(sse);
+        if(factory.contains(name, port)) {
           UIHelper.showAlertDialog(SshServerActivity.this, R.string.error, R.string.error_already_present);
+          factory.add(sse); /* restore */
           return;
-        } else if(sse != null) {
-          factory.remove(sse);
-          if(factory.contains(name, port)) {
-            UIHelper.showAlertDialog(SshServerActivity.this, R.string.error, R.string.error_already_present);
-            factory.add(sse); /* restore */
-            return;
-          }
         }
-        if(!spAuthMode.getSelectedItem().equals(unknown)) {
-          if(spAuthMode.getSelectedItem().equals(getString(R.string.anonymous))) {
-            username = null;
-            password = null;
-          } else {
-            username = tusername.getText() == null ? null : tusername.getText().toString();
-            password = tpassword.getText() == null ? null : tpassword.getText().toString();
-          }
-        }
-        factory.add(new SshServerEntry(name, Integer.parseInt(port), username, password));
-        mAdapter.notifyDataSetChanged();
-        if(!mMenuRefresh.isVisible())
-          mMenuRefresh.setVisible(true);
       }
+      if(sysHome.isEmpty())
+        sysHome = "/";
+      if(!spAuthMode.getSelectedItem().equals(unknown)) {
+        if(spAuthMode.getSelectedItem().equals(getString(R.string.anonymous))) {
+          username = null;
+          password = null;
+        } else {
+          username = tusername.getText() == null ? null : tusername.getText().toString();
+          password = tpassword.getText() == null ? null : tpassword.getText().toString();
+        }
+      }
+      ShellConfiguration cfg = new ShellConfiguration(sysHome, sysUser, sysGroup, ShellConfiguration.DEFAULT_SHELL, override);
+      factory.add(new SshServerEntry(name, Integer.parseInt(port), username, password, cfg));
+      mAdapter.notifyDataSetChanged();
+      if(!mMenuRefresh.isVisible())
+        mMenuRefresh.setVisible(true);
       dialog.dismiss();
     };
     /* init the spinner */
@@ -213,15 +224,25 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
       public void onNothingSelected(AdapterView<?> parentView) { }
     });
     /* attach the listeners and init the default values */
-    dialogBuilder.setPositiveButton(R.string.ok, ocl);
-    dialogBuilder.setNegativeButton(R.string.cancel, ocl);
+    dialogBuilder.setCancelable(false);
+    dialogBuilder.setPositiveButton(R.string.ok, null);
+    dialogBuilder.setNegativeButton(R.string.cancel, (dialog, whichButton) -> {});
     tport.setText(sse == null ? getString(R.string.default_port) : String.valueOf(sse.getPort()));
     tname.setText(sse == null ? "" : sse.getName());
     tusername.setText(sse == null || sse.getUsername() == null ? "" : sse.getUsername());
     tpassword.setText(sse == null || sse.getPassword() == null ? "" : sse.getPassword());
+
+    ShellConfiguration cfg = sse == null ? null : sse.getShellConfiguration();
+    cbSys.setChecked(cfg != null && cfg.isOverride());
+    txtSysUser.setText(cfg == null || cfg.getUser() == null ? ShellConfiguration.DEFAULT_USER : cfg.getUser());
+    txtSysGroup.setText(cfg == null || cfg.getGroup() == null ? ShellConfiguration.DEFAULT_GROUP : cfg.getGroup());
+    txtSysHome.setText(cfg == null || cfg.getHome() == null ? ShellConfiguration.DEFAULT_HOME : cfg.getHome());
+
     /* show the dialog */
     AlertDialog alertDialog = dialogBuilder.create();
     alertDialog.show();
+    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener((v) -> ocl.onClick(alertDialog, 0));
+    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener((v) -> alertDialog.dismiss());
   }
 
 
