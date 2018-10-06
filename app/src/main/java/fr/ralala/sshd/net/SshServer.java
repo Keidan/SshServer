@@ -76,7 +76,7 @@ public class SshServer {
           ShellConfiguration.DEFAULT_USER, ShellConfiguration.DEFAULT_GROUP,
           ShellConfiguration.DEFAULT_SHELL, ShellConfiguration.DEFAULT_OVERRIDE);
     mSshServer.setShellFactory(new ShellPTM(mShellConfiguration,
-        mShellConfiguration.getShell(), "-i", "-l"));
+        "-i", "-l"));
 
     List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>();
     if (mSshServerEntry.isAuthAnonymous())

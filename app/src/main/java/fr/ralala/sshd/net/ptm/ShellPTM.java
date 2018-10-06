@@ -33,7 +33,6 @@ public class ShellPTM implements Factory<Command>, InvertedShell {
   private static final int FLAG_SHELL = 1 << 5;
   private static final int FLAG_LOGNAME = 1 << 6;
   private static final int FLAG_ALL = FLAG_HOME|FLAG_USER|FLAG_GROUP|FLAG_SHELL|FLAG_LOGNAME;
-  private String mCmd;
   private String [] mArgs;
   private NativeProcessPTM mNativeProcessPTM;
   private ShellConfiguration mShellConfiguration;
@@ -42,12 +41,10 @@ public class ShellPTM implements Factory<Command>, InvertedShell {
   /**
    * Constructs a new Shell.
    * @param cfg The default configuration.
-   * @param cmd The command to execute.
    * @param args The command arguments.
    */
   @SuppressWarnings("WeakerAccess")
-  public ShellPTM(ShellConfiguration cfg, String cmd, String... args) {
-    mCmd = cmd;
+  public ShellPTM(ShellConfiguration cfg, String... args) {
     mArgs = args;
     mShellConfiguration = cfg;
   }
@@ -161,7 +158,7 @@ public class ShellPTM implements Factory<Command>, InvertedShell {
       removeIf(envP, "SHELL=");
       envP.add("SHELL=" + mShellConfiguration.getShell());
     }
-    mNativeProcessPTM = NativeProcessPTM.create(mCmd, mArgs, envP.toArray(new String[] { }));
+    mNativeProcessPTM = NativeProcessPTM.create(mShellConfiguration.getShell(), mArgs, envP.toArray(new String[] { }));
   }
 
   /**
