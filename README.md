@@ -17,12 +17,15 @@ The process management is done directly via a native code with the direct use of
 
 __IMPORTANT:__ I don't know why, but, the code doesn't work properly if the build variant is not set to "debug".
 
+Since /system/bin/ls and other basic binaries are not available without a root device, 
+SCP and SFTP features will not be available for these devices.
+
 
 Instructions
 ============
 
 
-download the software :
+Download the software :
 
 	mkdir devel
 	cd devel
