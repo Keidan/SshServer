@@ -48,11 +48,12 @@ static auto getStringUTF(JNIEnv *env, jstring jstr) -> std::string {
  * @brief Creates a forked process using the pseudo-terminal ptm.
  * @param jenv JNI environment
  * @param pid The output PID.
+ * @param cdir The current directory to use.
  * @param cmd The command to execute.
  * @param args The command arguments.
  * @return The FD of the ptm device.
  */
-static auto ptmFork(JNIEnv *jenv, pid_t* pid, std::string cmd, std::vector<char const *> args) -> int {
+static auto ptmFork(JNIEnv *jenv, pid_t* pid, std::string cdir, std::string cmd, std::vector<char const *> args) -> int {
   char* devname;
   int ptDevFd;
 
@@ -109,6 +110,8 @@ static auto ptmFork(JNIEnv *jenv, pid_t* pid, std::string cmd, std::vector<char 
     dup2(ptOpenFd, 2);
     /* Close the unused FD. */
     close(ptDevFd);
+    /* Adjusts the current directory to the directory specified by the configuration (here the one pointed to by the variable HOME). */
+    chdir(cdir.c_str());
     /* Exec the command. */
     execvp(cmd.c_str(), (char * const *)args.data());
     exit(-1);
@@ -176,6 +179,7 @@ JNIEXPORT auto JNICALL Java_fr_ralala_sshd_net_ptm_NativeProcessPTM_create0
   }
   args.push_back(nullptr); /* null terminated */
   /* Parses and sets the env variables. */
+  std::string cdir = "/";
   if(jarrayEnv != nullptr) {
     auto count = env->GetArrayLength(jarrayEnv);
     if(count != 0) {
@@ -190,6 +194,8 @@ JNIEXPORT auto JNICALL Java_fr_ralala_sshd_net_ptm_NativeProcessPTM_create0
             columns = std::stoi(value);
           else if(key.compare("LINES") == 0)
             lines = std::stoi(value);
+          else if(key.compare("HOME") == 0)
+            cdir = value;
           setenv(key.c_str(), value.c_str(), 1);
         }
       }
@@ -203,7 +209,7 @@ JNIEXPORT auto JNICALL Java_fr_ralala_sshd_net_ptm_NativeProcessPTM_create0
     return nullptr;
   }
   pid_t pid;
-  auto ptFd = ptmFork(env, &pid, cmd, args);
+  auto ptFd = ptmFork(env, &pid, cdir, cmd, args);
   env->SetIntField(instanceNativeProcess, nativeProcessFieldPid, pid);
   env->SetIntField(instanceNativeProcess, nativeProcessFieldDescriptor, ptFd);
 
