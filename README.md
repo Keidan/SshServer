@@ -5,6 +5,10 @@ SshServer
 
 This application allows you to create several instances of SSH servers (SSH/SCP/SFTP).
 
+:exclamation::warning::exclamation: Due to the use of apache MINA 2.0 which uses java methods that are only implemented since Android 8.0, this application is only compatible with an Android 8+ version.
+
+## Notice
+
 For non-rooted devices, the functionalities are severely limited (permission issues).
 
 To limit (delete) issues related to /system/bin/sh and tty (below)
@@ -15,14 +19,14 @@ To limit (delete) issues related to /system/bin/sh and tty (below)
 The process management is done directly via a native code with the direct use of the character file /dev/ptm.
 
 
-__IMPORTANT:__ I don't know why, but, the code doesn't work properly if the build variant is not set to "debug".
+:exclamation::exclamation::exclamation: I don't know why, but, the code doesn't work properly if the build variant is not set to "debug" :anger:.
 
 Since /system/bin/ls and other basic binaries are not available without a root device, 
 SCP and SFTP features will not be available for these devices.
 
 
-Instructions
-============
+
+## Instructions
 
 
 Download the software :
@@ -34,9 +38,11 @@ Download the software :
  	Use with android studio
 
 	
-/!\ To compile this project, you must also install the CMAKE, LLDB (debug only) and the NDK packages.
+:warning: To compile this project, you must also install the CMAKE, LLDB (debug only) and the NDK packages.
 
-(see https://codelabs.developers.google.com/codelabs/android-studio-cmake)
+See [android studio cmake](https://codelabs.developers.google.com/codelabs/android-studio-cmake)
 
-License (like GPL)
-==================
+
+## License
+
+[GPLv3](https://github.com/Keidan/SshServer/blob/master/license.txt)
