@@ -57,9 +57,9 @@ public class SshServer {
   /**
    * Starts the SSH server.
    * @param host The host address to use.
-   * @throws Exception If a network exception occurs.
+   * @throws Throwable If a network exception occurs.
    */
-  public void start(final String host) throws Exception {
+  public void start(final String host) throws Throwable {
     if (mSshServer != null) return;
     /* create the server instance and set the default port */
     mSshServer = org.apache.sshd.server.SshServer.setUpDefaultServer();

@@ -10,6 +10,7 @@ import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +47,7 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
   private NetworkBroadcaster mNetworkBroadcaster = null;
   private Vibrator mVibrator;
   private MenuItem mMenuRefresh;
+  private SnackException mSnackException;
 
   /**
    * Called when the activity is created.
@@ -58,13 +60,16 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
     setContentView(R.layout.activity_ssh);
     mApp = SshServerApplication.getApp(this);
     mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
+	  // Adds custom toolbar
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
     // Check whether we're recreating a previously destroyed instance
     if (savedInstanceState == null || !savedInstanceState.containsKey(getClass().getSimpleName())) {
       mApp.getSshServerEntryFactory().load();
       mNetworkBroadcaster = new NetworkBroadcaster(this, this);
       mNetworkBroadcaster.load();
     }
+	mSnackException = new SnackException(this);
 
     ListView listView = findViewById(R.id.list);
     mAdapter = new SshServerEntriesArrayAdapter(this, mApp.getSshServerEntryFactory().list(), this);
@@ -158,9 +163,9 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
         mAdapter.notifyDataSetChanged();
         NotificationFactory.show(this, sse);
         return true;
-      } catch (Exception e) {
+      } catch (Throwable e) {
         Log.e(getClass().getSimpleName(), "Exception: " + e.getMessage(), e);
-        UIHelper.toast(this, sse.getName() + " " + getString(R.string.error_return_an_exception) + ": " + e.getMessage());
+		mSnackException.show(sse.getName() + " " + getString(R.string.error_return_an_exception), e);
       }
     }
     return false;

@@ -36,6 +36,10 @@
   <string name="lbl_sys_user">System user name:</string>
   <string name="lbl_sys_group">System user group:</string>
   <string name="lbl_sys_home">System home dir:</string>
+  <string name="more">MORE</string>
+  <string name="message">Message:</string>
+  <string name="stack_trace">Stack traces:</string>
+  <string name="exception">Exception</string>
 
   <string-array name="auth_mode_list">
     <item>Anonymous</item>
