@@ -22,9 +22,9 @@ android {
   defaultConfig {
     applicationId "org.ralala.android.ssh.server"
     minSdkVersion 26
-    targetSdkVersion 26
-    versionCode 5
-    versionName "1.5"
+    targetSdkVersion 28
+    versionCode 6
+    versionName "1.6"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     ndk {
