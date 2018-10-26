@@ -20,6 +20,9 @@
 
 -dontwarn android.support.**
 -dontnote android.support.**
+-dontwarn org.apache.sshd.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.slf4j.**
 
 -ignorewarnings
 
