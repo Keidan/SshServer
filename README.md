@@ -1,5 +1,8 @@
-SshServer
-===
+# SshServer 
+[![Build Status](https://img.shields.io/travis/Keidan/SshServer/master.svg?style=plastic)](https://travis-ci.org/Keidan/SshServer)
+[![GitHub license](https://img.shields.io/github/license/Keidan/SshServer.svg?style=plastic)](https://github.com/Keidan/SshServer/blob/master/license.txt)
+
+
 
 (GPL) Android SSH server (SSH/SCP/SFTP) is a FREE software.
 
