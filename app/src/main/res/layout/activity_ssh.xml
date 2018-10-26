@@ -31,8 +31,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <android.support.v7.widget.AppCompatImageView
+      android:layout_alignParentStart="true"
+      android:layout_alignParentTop="true"
+      android:gravity="center"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/ivRefreshHostAddress"
+      android:contentDescription="@null"
+      app:srcCompat="@mipmap/ic_refresh"/>
 
     <TextView
+      android:layout_toEndOf="@id/ivRefreshHostAddress"
+      android:layout_marginStart="5dp"
+      android:gravity="center_vertical"
       android:id="@+id/txtHostAddress"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
@@ -42,6 +54,8 @@
       android:textStyle="bold" />
 
     <ListView
+      android:layout_below="@id/ivRefreshHostAddress"
+      android:layout_alignParentStart="true"
       android:id="@+id/list"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
