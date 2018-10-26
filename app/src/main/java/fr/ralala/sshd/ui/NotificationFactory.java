@@ -132,11 +132,9 @@ public class NotificationFactory {
    * @return String
    */
   private static String buildText(final Context c, final SshServerEntry sse) {
-    String part1 = c.getString(R.string.notification_text_1);
-    String part2 = c.getString(R.string.notification_text_2);
-    String msg = String.format(Locale.US, part1, sse.getId(), sse.getPort());
+    String msg = c.getString(R.string.notification_text_1, sse.getId(), sse.getPort());
     if (!sse.isAuthAnonymous())
-      msg += String.format(Locale.US, part2, sse.getUsername());
+      msg += c.getString(R.string.notification_text_2, sse.getUsername());
     return msg;
   }
 
