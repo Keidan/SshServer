@@ -171,6 +171,7 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
         sse.setStarted(true);
         mAdapter.notifyDataSetChanged();
         NotificationFactory.show(this, sse);
+        vibrate250ms();
         return true;
       } catch (Throwable e) {
         Log.e(getClass().getSimpleName(), "Exception: " + e.getMessage(), e);
@@ -193,10 +194,14 @@ public class SshServerActivity extends AppCompatActivity implements NetworkStatu
       sse.setStarted(false);
       mAdapter.notifyDataSetChanged();
       NotificationFactory.hide(this, sse);
-      mVibrator.vibrate(VibrationEffect.createOneShot(250, VibrationEffect.DEFAULT_AMPLITUDE));
+      vibrate250ms();
       return true;
     }
     return false;
+  }
+
+  private void vibrate250ms() {
+    mVibrator.vibrate(250);
   }
 
   /**

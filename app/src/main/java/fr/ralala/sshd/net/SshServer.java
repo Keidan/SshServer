@@ -2,18 +2,18 @@ package fr.ralala.sshd.net;
 
 import android.util.Log;
 
+import org.apache.sshd.common.ForwardingFilter;
 import org.apache.sshd.common.NamedFactory;
-import org.apache.sshd.common.session.Session;
-import org.apache.sshd.common.util.net.SshdSocketAddress;
-import org.apache.sshd.server.auth.UserAuth;
-import org.apache.sshd.server.auth.UserAuthNoneFactory;
-import org.apache.sshd.server.auth.password.UserAuthPasswordFactory;
-import org.apache.sshd.server.command.Command;
-import org.apache.sshd.server.forward.ForwardingFilter;
+import org.apache.sshd.common.Session;
+import org.apache.sshd.common.SshdSocketAddress;
+import org.apache.sshd.server.Command;
+import org.apache.sshd.server.UserAuth;
+import org.apache.sshd.server.auth.UserAuthNone;
+import org.apache.sshd.server.auth.UserAuthPassword;
+import org.apache.sshd.server.command.ScpCommandFactory;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
+import org.apache.sshd.server.sftp.SftpSubsystem;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.apache.sshd.server.scp.ScpCommandFactory;
 
 
 import java.security.Security;
@@ -35,7 +35,7 @@ import fr.ralala.sshd.net.ptm.ShellPTM;
  * ******************************************************************************
  */
 public class SshServer {
-  private org.apache.sshd.server.SshServer mSshServer = null;
+  private org.apache.sshd.SshServer mSshServer = null;
   private SshServerEntry mSshServerEntry = null;
   private ShellConfiguration mShellConfiguration;
 
@@ -62,9 +62,9 @@ public class SshServer {
   public void start(final String host) throws Throwable {
     if (mSshServer != null) return;
     /* create the server instance and set the default port */
-    mSshServer = org.apache.sshd.server.SshServer.setUpDefaultServer();
+    mSshServer = org.apache.sshd.SshServer.setUpDefaultServer();
     //mSshServer.getProperties().put(org.apache.sshd.server.SshServer.IDLE_TIMEOUT, "10000");
-    mSshServer.getProperties().put(org.apache.sshd.server.SshServer.AUTH_TIMEOUT, "100000");
+    mSshServer.getProperties().put(org.apache.sshd.SshServer.AUTH_TIMEOUT, "100000");
     mSshServer.getProperties().put("welcome-banner", "Welcome to android SshServer\n");
     mSshServer.setHost(host);
     //mSshServer.setReuseAddress(true);
@@ -81,9 +81,9 @@ public class SshServer {
     List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>();
     if (mSshServerEntry.isAuthAnonymous())
       /* Allow anonymous connections */
-      userAuthFactories.add(UserAuthNoneFactory.INSTANCE);
+      userAuthFactories.add(new UserAuthNone.Factory());
     else {
-      userAuthFactories.add(UserAuthPasswordFactory.INSTANCE);
+      userAuthFactories.add(new UserAuthPassword.Factory());
       mSshServer.setPasswordAuthenticator((username, password, session) ->
           mSshServerEntry.getUsername().equals(username) && mSshServerEntry.getPassword().equals(password)
       );
@@ -92,23 +92,26 @@ public class SshServer {
     /* Enable SFTP commands */
     mSshServer.setCommandFactory(new ScpCommandFactory());
     List<NamedFactory<Command>> namedFactoryList = new ArrayList<>();
-    namedFactoryList.add(new SftpSubsystemFactory());
+    namedFactoryList.add(new SftpSubsystem.Factory());
     mSshServer.setSubsystemFactories(namedFactoryList);
-    mSshServer.setForwardingFilter(new ForwardingFilter() {
+    mSshServer.setTcpipForwardingFilter(new ForwardingFilter() {
       @Override
-      public boolean canForwardX11(Session session, String requestType) {
+      public boolean canForwardAgent(Session session) {
         return true;
       }
+
+      @Override
+      public boolean canForwardX11(Session session) {
+        return true;
+      }
+
       @Override
       public boolean canListen(SshdSocketAddress address, Session session) {
         return true;
       }
+
       @Override
-      public boolean canConnect(Type type, SshdSocketAddress address, Session session) {
-        return true;
-      }
-      @Override
-      public boolean canForwardAgent(Session session, String requestType) {
+      public boolean canConnect(SshdSocketAddress address, Session session) {
         return true;
       }
     });

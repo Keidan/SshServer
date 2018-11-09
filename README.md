@@ -8,7 +8,7 @@
 
 This application allows you to create several instances of SSH servers (SSH/SCP/SFTP).
 
-:exclamation::warning::exclamation: Due to the use of apache MINA 2.0 which uses java methods that are only implemented since Android 8.0, this application is only compatible with an Android 8+ version.
+:exclamation::warning::exclamation: This branch was created only for compatibility with Android 7.x for Android 8.0 and higher, please use the master branch.
 
 ## Notice
 

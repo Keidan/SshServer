@@ -2,13 +2,10 @@ package fr.ralala.sshd.ui;
 
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
@@ -16,7 +13,6 @@ import fr.ralala.sshd.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import fr.ralala.sshd.net.SshServerEntry;
 
@@ -46,22 +42,11 @@ public class NotificationFactory {
   public static void show(final Context c, SshServerEntry sse) {
     if (mEntries.isEmpty()) {
       mEntries.add(sse);
-      NotificationManager manager = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
-      if (manager != null) {
-        NotificationChannel prevChannel = manager.getNotificationChannel(NFY_CHANNEL_ID);
-        if (prevChannel == null) {
-          createChannel(c, manager);
-        }
-      }
       buildNotification(c, sse);
     } else {
       mEntries.forEach((e) -> NotificationManagerCompat.from(c).cancel(e.getId()));
       if (sse != null)
         mEntries.add(sse);
-      NotificationManager manager = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
-      if (manager != null) {
-        manager.createNotificationChannelGroup(new NotificationChannelGroup(GROUP_KEY, GROUP_KEY));
-      }
       NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
       NotificationManagerCompat notificationManager = NotificationManagerCompat.from(c);
       mEntries.forEach((e) -> style.addLine(buildText(c, e)));
@@ -93,10 +78,8 @@ public class NotificationFactory {
     if (notificationManager != null) {
       if (mEntries.isEmpty()) {
         NotificationManagerCompat.from(c).cancel(sse.getId());
-        notificationManager.deleteNotificationChannel(NFY_CHANNEL_ID);
       } else {
         NotificationManagerCompat.from(c).cancel(SUMMARY_ID);
-        notificationManager.deleteNotificationChannelGroup(GROUP_KEY);
         if(mEntries.size() == 1)
           mEntries.forEach((e) -> buildNotification(c, e));
         else
@@ -136,20 +119,5 @@ public class NotificationFactory {
     if (!sse.isAuthAnonymous())
       msg += c.getString(R.string.notification_text_2, sse.getUsername());
     return msg;
-  }
-
-  /**
-   * Creates the notification channel.
-   * @param c The Android context.
-   * @param notificationManager The instance to the notification manager.
-   */
-  private static void createChannel(final Context c, NotificationManager notificationManager) {
-    int importance = NotificationManager.IMPORTANCE_DEFAULT;
-    NotificationChannel channel = new NotificationChannel(NFY_CHANNEL_ID, c.getString(R.string.app_name), importance);
-    channel.enableLights(true);
-    channel.enableVibration(true);
-    channel.setLightColor(Color.GRAY);
-    channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-    notificationManager.createNotificationChannel(channel);
   }
 }

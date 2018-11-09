@@ -3,8 +3,8 @@ package fr.ralala.sshd.net.ptm;
 import android.util.Log;
 
 import org.apache.sshd.common.Factory;
+import org.apache.sshd.server.Command;
 import org.apache.sshd.server.Environment;
-import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.shell.InvertedShell;
 import org.apache.sshd.server.shell.InvertedShellWrapper;
@@ -118,11 +118,10 @@ public class ShellPTM implements Factory<Command>, InvertedShell {
    * @throws IOException If an exception is thrown.
    */
   @Override
-  public void start(Environment env) throws IOException {
-    Map<String, String> e = env.getEnv();
+  public void start(Map<String, String> env) throws IOException {
     List<String> envP = new ArrayList<>();
     int flags = FLAG_ALL;
-    for (Map.Entry<String, String> entry : e.entrySet()) {
+    for (Map.Entry<String, String> entry : env.entrySet()) {
       String key = entry.getKey();
       String value = entry.getValue();
       if(key.equals("HOME") && !mShellConfiguration.isOverride()) {
@@ -172,14 +171,4 @@ public class ShellPTM implements Factory<Command>, InvertedShell {
         list.remove(i);
     }
   }
-
-  /**
-   * Sets the server session.
-   * @param session The ServerSession in which this shell will be executed.
-   */
-  @Override
-  public void setSession(ServerSession session) {
-    Log.e(getClass().getSimpleName(), "Session: " + session);
-  }
-
 }
