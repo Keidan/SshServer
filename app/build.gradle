@@ -21,11 +21,11 @@ android {
   compileSdkVersion 28
   buildToolsVersion "28.0.2"
   defaultConfig {
-    applicationId "org.ralala.android.ssh.server"
+    applicationId "fr.ralala.sshd"
     minSdkVersion 24
     targetSdkVersion 28
-    versionCode 7
-    versionName "1.7"
+    versionCode 8
+    versionName "1.8"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     ndk {
