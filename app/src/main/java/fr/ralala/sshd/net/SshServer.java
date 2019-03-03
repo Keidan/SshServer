@@ -2,6 +2,7 @@ package fr.ralala.sshd.net;
 
 import android.util.Log;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.session.Session;
 import org.apache.sshd.common.util.net.SshdSocketAddress;
@@ -61,6 +62,7 @@ public class SshServer {
    */
   public void start(final String host) throws Throwable {
     if (mSshServer != null) return;
+    BasicConfigurator.configure();
     /* create the server instance and set the default port */
     mSshServer = org.apache.sshd.server.SshServer.setUpDefaultServer();
     //mSshServer.getProperties().put(org.apache.sshd.server.SshServer.IDLE_TIMEOUT, "10000");
