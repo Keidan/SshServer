@@ -10,7 +10,7 @@ This application allows you to create several instances of SSH servers (SSH/SCP/
 
 :exclamation::warning::exclamation: Due to the use of apache MINA 2.0 which uses java methods that are only implemented since Android 8.0, this branch is not compatible with an Android version < 8.0
 
-:warning: Due to the depredation of encryption providers (algorithms) [see] (https://android-developers.googleblog.com/2018/03/cryptography-changes-in-android-p.html) and without a solution at the mina-sshd API level, this application will no longer be supported after Android 9.0.
+:warning: Due to the depredation of encryption providers (algorithms) [see](https://android-developers.googleblog.com/2018/03/cryptography-changes-in-android-p.html) and without a solution at the mina-sshd API level, this application will no longer be supported after Android 9.0.
 
 ## Notice
 
