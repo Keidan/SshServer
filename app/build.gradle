@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 ext {
   supportVersion = "28.0.0"
   sshdCoreVersion = "2.0.0"
-  slf4jVersion = "1.7.26"
+  //slf4jVersion = "1.7.26"
 }
 
 dependencies {
@@ -15,7 +15,7 @@ dependencies {
   implementation group: 'org.apache.sshd', name: 'sshd-core', version: "$sshdCoreVersion"
   implementation group: 'org.apache.sshd', name: 'sshd-scp', version: "$sshdCoreVersion"
   implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: "$sshdCoreVersion"
-  implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: "$slf4jVersion"
+  //implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: "$slf4jVersion"
 }
 
 android {
